@@ -1,0 +1,21 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+[project]
+name = "openedx_course_structure"
+version = "0.0.1"
+authors = [
+  { name="Oleg Demakov", email="oleg.demakov@epfl.ch" },
+]
+description = "Open edX course structure"
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/epfl-cede/openedx-course-structure"
+"Bug Tracker" = "https://github.com/epfl-cede/openedx-course-structure/issues"
