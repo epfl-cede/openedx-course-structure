@@ -6,7 +6,7 @@ This is a simple course structute builder from Open edX course exported tar.gz f
 
 ### CLI
 
-``` pip install git+https://github.com/epfl-cede/openedx-course-structure.git```
+```pip install git+https://github.com/epfl-cede/openedx-course-structure.git```
 
 ```python -m openedx_course_structure ~/Downloads/ORG+DemoCourse+2022.tar.gz```
 
