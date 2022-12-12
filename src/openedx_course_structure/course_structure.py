@@ -37,15 +37,12 @@ def structure(course_file):
         with tempfile.TemporaryDirectory() as tmpdir:
             fp.extractall(tmpdir)
 
-            # filter xml files only
-            xml_files = list(filter(lambda name: name.endswith('.xml'), fp.getnames()))
-
-            # find entry point file
-            ep = f'course/course/{run}.xml'
-            if ep not in xml_files:
+            # entry point file
+            ep = f'{tmpdir}/course/course/{run}.xml'
+            if not path.exists(ep):
                 raise OpenEdxCourseStructureException("Course entry point <%s> not found" % ep)
 
-            root = ET.parse(f'{tmpdir}/{ep}').getroot()
+            root = ET.parse(ep).getroot()
             structure = {
                 'name': root.attrib['display_name'],
                 'children': [],
