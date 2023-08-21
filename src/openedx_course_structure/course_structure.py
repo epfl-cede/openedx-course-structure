@@ -1,11 +1,14 @@
+import glob
 from os import path
 import tempfile
 import tarfile
 import re
 import xml.etree.ElementTree as ET
 
+
 class OpenEdxCourseStructureException(BaseException):
     pass
+
 
 def structure(course_file):
     def _children(root, name):
@@ -24,21 +27,20 @@ def structure(course_file):
                 roots.append(root)
         return result, roots
 
-    regexp = "^(?P<org>{ALLOWED_CHARS}+)\\+(?P<course>{ALLOWED_CHARS}+)\\+(?P<run>{ALLOWED_CHARS}+).tar.gz$".format(
-        ALLOWED_CHARS = r'[\w\-~.:]'
-    )
-    res = re.search(regexp, path.basename(course_file))
-    if not res:
-        raise OpenEdxCourseStructureException("Failed to parse course id <%s>" % path.basename(course_file))
-
-    org, session, run = res['org'], res['course'], res['run']
     structure = {}
     with tarfile.open(course_file) as fp:
         with tempfile.TemporaryDirectory() as tmpdir:
             fp.extractall(tmpdir)
 
+            ep = f'{tmpdir}/course/course.xml'
+            if not path.exists(ep):
+                raise OpenEdxCourseStructureException("Course main file <%s> not found" % ep)
+
+            root = ET.parse(ep).getroot()
+            url_name = root.attrib["url_name"]
+
             # entry point file
-            ep = f'{tmpdir}/course/course/{run}.xml'
+            ep = f'{tmpdir}/course/course/{url_name}.xml'
             if not path.exists(ep):
                 raise OpenEdxCourseStructureException("Course entry point <%s> not found" % ep)
 
