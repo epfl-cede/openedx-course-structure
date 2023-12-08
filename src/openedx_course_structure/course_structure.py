@@ -1,8 +1,7 @@
-import glob
 from os import path
+import json
 import tempfile
 import tarfile
-import re
 import xml.etree.ElementTree as ET
 
 
@@ -19,11 +18,19 @@ def structure(course_file):
             filename = tmpdir + '/course/%s/%s.xml' % (child.tag, child.attrib['url_name'])
             if path.exists(filename):
                 root = ET.parse(filename).getroot()
-                result.append({
+                res = {
                     'id': child.attrib['url_name'],
                     'type': child.tag,
                     'name': root.attrib['display_name'] if 'display_name' in root.attrib else "",
-                })
+                }
+                if child.tag == "video":
+                    if 'edx_video_id' in root.attrib:
+                        res['edx_video_id'] = root.attrib['edx_video_id']
+                    if 'html5_sources' in root.attrib:
+                        res['html5_sources'] = json.loads(root.attrib['html5_sources'])
+                    if 'youtube_id_1_0' in root.attrib:
+                        res['youtube_id_1_0'] = root.attrib['youtube_id_1_0']
+                result.append(res)
                 roots.append(root)
         return result, roots
 

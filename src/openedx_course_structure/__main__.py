@@ -1,7 +1,7 @@
 import sys
 import json
 
-from .course_structure import structure
+from course_structure import structure
 
 
 def usage():
